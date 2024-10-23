@@ -26,7 +26,7 @@ const loginUser = async (email, password) => {
     process.env.JWT_SECRET,
     { expiresIn: "1h" }
   );
-  return token;
+  return { user, token };
 };
 
 module.exports = { registerUser, loginUser };

@@ -30,4 +30,44 @@ const getImages = async (req, res) => {
   }
 };
 
-module.exports = { uploadImage, getImages };
+const getImageById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const image = await imageService.getImageById(id);
+    if (!image) {
+      return res.status(404).json({ message: "Image not found" });
+    }
+    res.status(200).json(image);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const updateImage = async (req, res) => {
+  const { id } = req.params;
+  const data = req.body;
+  try {
+    const updatedImage = await imageService.updateImage(id, data);
+    res.status(200).json(updatedImage);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const deleteImage = async (req, res) => {
+  const { id } = req.params;
+  try {
+    await imageService.deleteImage(id);
+    res.status(204).send();
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+module.exports = {
+  uploadImage,
+  getImages,
+  getImageById,
+  updateImage,
+  deleteImage,
+};

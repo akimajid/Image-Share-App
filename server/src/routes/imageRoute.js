@@ -11,5 +11,8 @@ router.post(
   imageController.uploadImage
 );
 router.get("/", imageController.getImages);
+router.get("/:id", imageController.getImageById);
+router.put("/:id", authenticate, imageController.updateImage);
+router.delete("/:id", authenticate, imageController.deleteImage);
 
 module.exports = router;

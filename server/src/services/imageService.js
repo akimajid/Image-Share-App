@@ -27,4 +27,29 @@ const getImages = async (category, keyword, page = 1, limit = 10) => {
   });
 };
 
-module.exports = { uploadImage, getImages };
+const getImageById = async (id) => {
+  return await prisma.image.findUnique({
+    where: { id: parseInt(id) },
+  });
+};
+
+const updateImage = async (id, data) => {
+  return await prisma.image.update({
+    where: { id },
+    data,
+  });
+};
+
+const deleteImage = async (id) => {
+  return await prisma.image.delete({
+    where: { id },
+  });
+};
+
+module.exports = {
+  uploadImage,
+  getImages,
+  getImageById,
+  updateImage,
+  deleteImage,
+};

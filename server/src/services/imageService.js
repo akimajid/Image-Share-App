@@ -34,16 +34,38 @@ const getImageById = async (id) => {
 };
 
 const updateImage = async (id, data) => {
-  return await prisma.image.update({
-    where: { id },
-    data,
-  });
+  try {
+    const updatedImage = await prisma.image.update({
+      where: { id: parseInt(id) },
+      data,
+    });
+    return updatedImage;
+  } catch (error) {
+    if (error.code === "P2025") {
+      console.error(`Image with id ${id} not found.`);
+      throw new Error(`Image with id ${id} not found.`);
+    } else {
+      console.error(`Error updating image with id ${id}:`, error);
+      throw new Error("Failed to update image.");
+    }
+  }
 };
 
 const deleteImage = async (id) => {
-  return await prisma.image.delete({
-    where: { id },
-  });
+  try {
+    const deletedImage = await prisma.image.delete({
+      where: { id: parseInt(id) },
+    });
+    return deletedImage;
+  } catch (error) {
+    if (error.code === "P2025") {
+      console.error(`Image with id ${id} not found.`);
+      throw new Error(`Image with id ${id} not found.`);
+    } else {
+      console.error(`Error deleting image with id ${id}:`, error);
+      throw new Error("Failed to delete image.");
+    }
+  }
 };
 
 module.exports = {

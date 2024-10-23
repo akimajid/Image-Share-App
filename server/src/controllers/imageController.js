@@ -48,7 +48,7 @@ const updateImage = async (req, res) => {
   const data = req.body;
   try {
     const updatedImage = await imageService.updateImage(id, data);
-    res.status(200).json(updatedImage);
+    res.status(200).json({ message: "Update image successfull", updatedImage });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -58,9 +58,15 @@ const deleteImage = async (req, res) => {
   const { id } = req.params;
   try {
     await imageService.deleteImage(id);
-    res.status(204).send();
+    res
+      .status(200)
+      .json({ message: `Image with id ${id} has been successfully deleted.` });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    if (error.message === `Image with id ${id} not found.`) {
+      res.status(404).json({ error: error.message });
+    } else {
+      res.status(500).json({ error: error.message });
+    }
   }
 };
 

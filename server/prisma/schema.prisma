@@ -1,51 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-generator client {
-  provider = "prisma-client-js"
-}
-
 model User {
-  id        Int          @id @default(autoincrement())
-  username  String       @unique
-  email     String       @unique
+  id        Int       @id @default(autoincrement())
+  username  String    @unique
+  email     String    @unique
   password  String
-  images    Image[]      // Relation to Image model
-  galleries Gallery[]    // Relation to Gallery model
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  galleries Gallery[]
+  images    Image[]
 }
 
 model Image {
-  id          Int           @id @default(autoincrement())
+  id          Int            @id @default(autoincrement())
   url         String
   title       String
   description String?
   category    String
   userId      Int
-  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  galleries   GalleryImage[] // Relation to GalleryImage model
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  galleries   GalleryImage[]
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Gallery {
-  id        Int           @id @default(autoincrement())
+  id        Int            @id @default(autoincrement())
   name      String
   userId    Int
-  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  images    GalleryImage[] // Relation to GalleryImage model
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  images    GalleryImage[]
 }
 
 model GalleryImage {
-  id        Int        @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   galleryId Int
   imageId   Int
-  gallery   Gallery    @relation(fields: [galleryId], references: [id], onDelete: Cascade)
-  image     Image      @relation(fields: [imageId], references: [id], onDelete: Cascade)
-  createdAt DateTime   @default(now())
+  createdAt DateTime @default(now())
+  gallery   Gallery  @relation(fields: [galleryId], references: [id], onDelete: Cascade)
+  image     Image    @relation(fields: [imageId], references: [id], onDelete: Cascade)
+
+  @@map("GalleryImage")
 }

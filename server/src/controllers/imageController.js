@@ -2,10 +2,23 @@ const imageService = require("../services/imageService");
 
 const uploadImage = async (req, res) => {
   const { title, description, category } = req.body;
+  const userId = req.user?.id;
+
+  if (!req.file) {
+    return res.status(400).json({ error: "No file uploaded." });
+  }
+
   const url = `/uploads/${req.file.filename}`;
-  const userId = req.user.id;
 
   try {
+    if (!title || !description || !category) {
+      return res.status(400).json({ error: "All fields are required." });
+    }
+
+    if (!userId) {
+      return res.status(401).json({ error: "Unauthorized. No user ID found." });
+    }
+
     const image = await imageService.uploadImage(
       userId,
       url,
@@ -13,6 +26,7 @@ const uploadImage = async (req, res) => {
       description,
       category
     );
+
     res.status(201).json({ image });
   } catch (error) {
     res.status(500).json({ error: error.message });

@@ -10,5 +10,10 @@ router.post(
   upload.single("image"),
   galleryImageController.addImageToGallery
 );
+router.put(
+  "/:imageId/move",
+  authenticate,
+  galleryImageController.moveImageToGallery
+);
 
 module.exports = router;

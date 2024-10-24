@@ -41,10 +41,39 @@ const getGalleriesById = async (req, res) => {
     res.status(500).json({ message: "Error fetching user galleries" });
   }
 };
+const updateGalleryName = async (req, res) => {
+  const { newName } = req.body;
+  const { galleryId } = req.params; 
+  const userId = req.user.id;
+
+  try {
+    const updatedGallery = await galleryService.updateGalleryName(
+      userId,
+      galleryId,
+      newName
+    );
+    res.status(200).json(updatedGallery);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+const deleteGallery = async (req, res) => {
+  const galleryId = parseInt(req.params.galleryId, 10);
+  const userId = req.user.id;
+
+  try {
+    await galleryService.deleteGallery(userId, galleryId);
+    res.status(200).json({ message: "Delete gallery successful" });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
 
 module.exports = {
   createGallery,
-  getUserGalleries,
   getAllGalleries,
   getGalleriesById,
+  updateGalleryName,
+  deleteGallery,
 };

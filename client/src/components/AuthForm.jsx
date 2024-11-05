@@ -7,6 +7,7 @@ import api from "@/utils/api";
 
 export default function AuthForm({ mode }) {
   const router = useRouter();
+  const [username, setUsername] = useState(""); // New state for username
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -17,7 +18,6 @@ export default function AuthForm({ mode }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Check if passwords match during registration
     if (mode === "register" && password !== confirmPassword) {
       setError("Passwords do not match");
       return;
@@ -25,22 +25,49 @@ export default function AuthForm({ mode }) {
 
     try {
       const endpoint = mode === "login" ? "/auth/login" : "/auth/register";
-      const response = await api.post(endpoint, { email, password });
-      localStorage.setItem("token", response.data.token);
-      router.push("/gallery");
+      const response = await api.post(endpoint, {
+        email,
+        password,
+        ...(mode === "register" && { username }),
+      });
+
+      if (mode === "login") {
+        localStorage.setItem("token", response.data.token.token);
+        router.push("/gallery");
+      } else {
+        router.push("/auth/login");
+      }
     } catch (error) {
-      console.error("Error during auth:", error);
       setError("Authentication failed. Please try again.");
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex items-center justify-center min-h-screen bg-gray-200">
       <div className="max-w-md w-full bg-white shadow-lg rounded-lg p-8">
-        <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">
-          {mode === "login" ? "Login to Your Account" : "Create an Account"}
+        <h2 className="text-4xl font-bold text-center text-gray-800 mb-8">
+          {mode === "login" ? "Login" : "Register"}
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
+          {mode === "register" && (
+            <div>
+              <label
+                htmlFor="username"
+                className="block text-gray-700 font-bold mb-2"
+              >
+                Username
+              </label>
+              <input
+                type="text"
+                id="username"
+                placeholder="Enter your username..."
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="w-full px-4 py-2 text-black border border-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                required
+              />
+            </div>
+          )}
           <div>
             <label
               htmlFor="email"

@@ -1,10 +1,19 @@
 const express = require("express");
 const app = express();
+const cors = require("cors");
 const authRoutes = require("./routes/authRoute");
 const imageRoutes = require("./routes/imageRoute");
 const galleryRoutes = require("./routes/galleryRoute");
 const galleryImageRoutes = require("./routes/galleryImageRoute");
 require("dotenv").config();
+
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
 // Middleware
 app.use(express.json());

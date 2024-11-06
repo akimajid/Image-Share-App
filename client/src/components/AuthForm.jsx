@@ -33,7 +33,7 @@ export default function AuthForm({ mode }) {
 
       if (mode === "login") {
         localStorage.setItem("token", response.data.token.token);
-        router.push("/gallery");
+        router.push("/images");
       } else {
         router.push("/auth/login");
       }

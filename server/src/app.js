@@ -17,7 +17,11 @@ app.use(
 
 // Middleware
 app.use(express.json());
-app.use("/uploads", express.static("uploads"));
+app.use("/uploads", (req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*"); // or specify your frontend origin
+  next();
+}, express.static("uploads"));
+
 
 // Routes
 app.use("/api/auth", authRoutes);

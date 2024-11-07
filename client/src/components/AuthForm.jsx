@@ -1,19 +1,38 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { IoEyeOff, IoEye } from "react-icons/io5"; // Import the icons
+import { IoEyeOff, IoEye } from "react-icons/io5";
 import api from "@/utils/api";
 
 export default function AuthForm({ mode }) {
   const router = useRouter();
-  const [username, setUsername] = useState(""); // New state for username
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const tokenExists = localStorage.getItem("token") !== null;
+    setIsLoggedIn(tokenExists);
+
+    if (tokenExists) {
+      router.push("/images");
+    }
+
+    const handleStorageChange = () => {
+      setIsLoggedIn(localStorage.getItem("token") !== null);
+    };
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, [router]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,6 +52,8 @@ export default function AuthForm({ mode }) {
 
       if (mode === "login") {
         localStorage.setItem("token", response.data.token.token);
+        localStorage.setItem("userId", response.data.token.user.id);
+        setIsLoggedIn(true);
         router.push("/images");
       } else {
         router.push("/auth/login");
@@ -41,6 +62,10 @@ export default function AuthForm({ mode }) {
       setError("Authentication failed. Please try again.");
     }
   };
+
+  if (isLoggedIn) {
+    return null;
+  }
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-200">

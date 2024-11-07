@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import api from "@/utils/api";
+import Link from "next/link";
 
 const BASE_URL = "http://localhost:5000";
 
@@ -39,7 +40,7 @@ export default function ImagesPage() {
   if (error) {
     return (
       <p className="text-red-500 text-center font-semibold mt-6">{error}</p>
-    ); // Display error if any
+    );
   }
 
   return (
@@ -49,23 +50,29 @@ export default function ImagesPage() {
       </h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
         {images.length > 0 ? (
-          images.map((image) => (
-            <div
-              key={image.id}
-              className="border rounded-lg overflow-hidden shadow-lg bg-white hover:scale-105 transition-transform duration-200"
-            >
-              <img
-                src={image.url}
-                alt={image.description}
-                className="w-full h-64 object-cover"
-              />
-              <div className="p-4">
-                <p className="text-sm text-gray-600">{image.description}</p>
+          images.map((image) => {
+            return (
+              <div
+                key={image.id}
+                className="border rounded-lg overflow-hidden shadow-lg bg-white hover:scale-105 transition-transform duration-200"
+              >
+                <Link href={`/images/${image.id}/edit`}>
+                  <img
+                    src={image.url}
+                    alt={image.description}
+                    className="w-full h-64 object-cover cursor-pointer"
+                  />
+                </Link>
+                <div className="p-4">
+                  <p className="text-sm mt-2 text-gray-600">
+                    {image.description}
+                  </p>
+                </div>
               </div>
-            </div>
-          ))
+            );
+          })
         ) : (
-          <p className="text-center text-gray-500">No images available</p> // Fallback message
+          <p className="text-center text-gray-500">No images available</p>
         )}
       </div>
     </div>

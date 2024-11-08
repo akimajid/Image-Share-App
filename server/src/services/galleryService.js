@@ -1,7 +1,7 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-const createGallery = async (userId, name, description) => {
+const createGallery = async (userId, name) => {
   return await prisma.gallery.create({
     data: {
       name,
@@ -13,7 +13,11 @@ const createGallery = async (userId, name, description) => {
 const getAllGalleries = async () => {
   return await prisma.gallery.findMany({
     include: {
-      images: true,
+      images: {
+        include: {
+          image: true,
+        },
+      },
     },
   });
 };
@@ -22,7 +26,11 @@ const getGalleriesById = async (userId) => {
   return await prisma.gallery.findMany({
     where: { userId },
     include: {
-      images: true,
+      images: {
+        include: {
+          image: true,
+        },
+      },
     },
   });
 };

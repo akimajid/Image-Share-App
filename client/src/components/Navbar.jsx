@@ -50,10 +50,10 @@ export default function Navbar() {
             Upload
           </Link>
           <Link
-            href="/profile"
+            href="/images"
             className="hover:text-gray-200 transition-colors duration-300"
           >
-            Profile
+            Images
           </Link>
         </div>
 

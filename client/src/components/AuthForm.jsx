@@ -54,6 +54,7 @@ export default function AuthForm({ mode }) {
         localStorage.setItem("token", response.data.token.token);
         localStorage.setItem("userId", response.data.token.user.id);
         setIsLoggedIn(true);
+        window.location.reload();
         router.push("/images");
       } else {
         router.push("/auth/login");

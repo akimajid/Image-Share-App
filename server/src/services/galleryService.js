@@ -22,9 +22,9 @@ const getAllGalleries = async () => {
   });
 };
 
-const getGalleriesById = async (userId) => {
-  return await prisma.gallery.findMany({
-    where: { userId },
+const getGalleriesById = async (galleryId) => {
+  return await prisma.gallery.findUnique({
+    where: { id: Number(galleryId) },
     include: {
       images: {
         include: {

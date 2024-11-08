@@ -33,17 +33,31 @@ const getAllGalleries = async (req, res) => {
 };
 
 const getGalleriesById = async (req, res) => {
-  const userId = req.user?.id;
+  const galleryId = parseInt(req.params.galleryId, 10);
+
+  if (isNaN(galleryId)) {
+    return res.status(400).json({ message: "Invalid Gallery ID" });
+  }
+
   try {
-    const galleries = await galleryService.getGalleriesById(userId);
-    res.status(200).json({ message: "Display gallery successful", galleries });
+    const gallery = await galleryService.getGalleriesById(galleryId);
+    if (gallery) {
+      res
+        .status(200)
+        .json({ message: "Gallery retrieved successfully", gallery });
+    } else {
+      res.status(404).json({ message: "Gallery not found" });
+    }
   } catch (error) {
-    res.status(500).json({ message: "Error fetching user galleries" });
+    res
+      .status(500)
+      .json({ message: "Error fetching gallery", error: error.message });
   }
 };
+
 const updateGalleryName = async (req, res) => {
   const { newName } = req.body;
-  const { galleryId } = req.params; 
+  const { galleryId } = req.params;
   const userId = req.user.id;
 
   try {

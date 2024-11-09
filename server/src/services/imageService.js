@@ -13,19 +13,25 @@ const uploadImage = async (userId, url, title, description, category) => {
   });
 };
 
-const getImages = async (category, keyword, page = 1, limit = 10) => {
-  const skip = (page - 1) * limit;
+const getImages = async (category, keyword) => {
+  // Validasi input category dan keyword
+  const filters = {
+    AND: [],
+  };
+
+  if (category) {
+    filters.AND.push({ category: category });
+  }
+
+  if (keyword) {
+    filters.AND.push({ title: { contains: keyword } });
+  }
+
   return await prisma.image.findMany({
-    where: {
-      AND: [
-        { category: category || undefined },
-        { title: { contains: keyword || "" } },
-      ],
-    },
-    skip: parseInt(skip),
-    take: parseInt(limit),
+    where: filters.AND.length > 0 ? filters : undefined, // hanya menerapkan filter jika ada
   });
 };
+
 
 const getImageById = async (id) => {
   return await prisma.image.findUnique({

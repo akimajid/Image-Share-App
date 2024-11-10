@@ -8,7 +8,7 @@ const ImageCard = ({ image }) => {
         <img
           src={fullUrl}
           alt="Uploaded Image"
-          className="object-cover w-full h-full transition-transform duration-300 ease-in-out transform hover:scale-105 rounded-lg"
+          className="object-cover w-full h-full transition-transform duration-300 ease-in-out transform hover:scale-105 rounded-lg cursor-pointer"
         />
       </div>
       <div className="mt-4 text-center">

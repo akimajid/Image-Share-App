@@ -12,7 +12,6 @@ router.post(
 );
 router.put(
   "/:imageId/move",
-  authenticate,
   galleryImageController.moveImageToGallery
 );
 
